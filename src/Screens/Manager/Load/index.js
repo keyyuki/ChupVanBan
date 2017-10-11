@@ -5,12 +5,16 @@ import { Google } from 'expo';
 import { logout, setProfile } from '../../../Actions/Auth';
 
 class LoadScreen extends Component{
+    componentDidMount(){
+        this.loadUserInfo();
+    }
+
     loadUserInfo = async() => {
         try {
             var userInfoResponse = await fetch('https://www.googleapis.com/userinfo/v2/me', {
                 headers: { Authorization: `Bearer ${this.props.googleAccessToken}`},
               });
-            var result = userInfoResponse.json();
+            var result = await userInfoResponse.json();
 
             if(result && result.id){
                 return this.props.setProfile(result);
@@ -19,7 +23,6 @@ class LoadScreen extends Component{
         } catch (error) {
             this.props.logout();
         }
-
     }
 
     render(){

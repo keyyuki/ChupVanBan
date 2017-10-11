@@ -30,8 +30,7 @@ const setProfile = (profile) => {
     }
 }
 
-export default {
-
+export  {
     setAuthInfo,
     logout,
     setProfile

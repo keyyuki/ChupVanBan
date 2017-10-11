@@ -12,7 +12,7 @@ class Router extends React.Component{
     }
     componentDidMount(){
         // kiem tra storeage co accesstoken ko
-        this.getStorageAccessToken().then(auth => {
+        this.getStorageAccessToken().then((auth) => {
             if(auth){
                 this.setState({
                     authenticated: 'authenticated'
@@ -29,7 +29,7 @@ class Router extends React.Component{
 
     getStorageAccessToken = async () => {
         try {
-            var auth = AsyncStorage.getItem('@GoogleAuthenticate');
+            var auth = await AsyncStorage.getItem('@GoogleAuthenticate');
             if(auth){
                 return JSON.parse(auth);
             }

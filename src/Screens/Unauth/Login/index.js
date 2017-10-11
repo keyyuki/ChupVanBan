@@ -10,7 +10,7 @@ class Login extends React.Component{
     }
     requestSigninToGoogle = async() => {
         try {
-            const result = await Google.logInAsync({
+            var result = await Google.logInAsync({
                 androidClientId: '126636368431-g07u48bd09lfnhd2ih6ad29klo23d2jo.apps.googleusercontent.com',
                 //iosClientId: YOUR_CLIENT_ID_HERE,
                 scopes: [
@@ -20,7 +20,7 @@ class Login extends React.Component{
                 ],
             });
 
-            if (result.type === 'success') {
+            if (result && result.type === 'success') {
                 return result;
             } else {
                 return false;
