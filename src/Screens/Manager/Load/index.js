@@ -5,6 +5,9 @@ import { Google } from 'expo';
 import { logout, setProfile } from '../../../Actions/Auth';
 
 class LoadScreen extends Component{
+    static navigationOptions = {
+        title: 'main',        
+    };
     componentDidMount(){
         this.loadUserInfo();
     }

@@ -4,6 +4,7 @@ import {View, Text, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import Login from '../Screens/Unauth/Login';
 import Load from '../Screens/Manager/Load';
+import AuthorizedRouter from './Authorized'
 import { logout, setAuthInfo } from '../Actions/Auth'
 
 class Router extends React.Component{
@@ -52,7 +53,7 @@ class Router extends React.Component{
             )
         }
         if(this.props.google){
-            return <Load/>;
+            return <AuthorizedRouter/>;
         } else {
             return <Login/>;
         }

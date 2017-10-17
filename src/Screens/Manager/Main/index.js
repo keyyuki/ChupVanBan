@@ -3,6 +3,10 @@ import { Text, View } from 'react-native';
 import { connect } from 'react-redux';
 
 class Main extends React.Component{
+    static navigationOptions = {
+        title: 'main',        
+    };
+
     componentDidMount(){
         console.log('====================================');
         console.log(this.props.profile);
@@ -12,7 +16,7 @@ class Main extends React.Component{
 
     render(){
         return <View>
-            <Text>Welcome !</Text>
+            <Text>Welcome main!</Text>
         </View>
     }
 }
