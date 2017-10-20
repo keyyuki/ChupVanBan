@@ -20,7 +20,9 @@ class LoadScreen extends Component{
             var result = await userInfoResponse.json();
 
             if(result && result.id){
-                return this.props.setProfile(result);
+                this.props.setProfile(result);
+                this.props.navigation.navigate('MainScreen');
+                return;
             }
             return this.props.logout();
         } catch (error) {
