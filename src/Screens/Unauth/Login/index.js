@@ -89,8 +89,8 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        setAuthInfo: () => {
-            dispatch(setAuthInfo());
+        setAuthInfo: (auth) => {
+            dispatch(setAuthInfo(auth));
         }
     };
 };

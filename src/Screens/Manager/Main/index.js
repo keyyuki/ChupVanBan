@@ -3,6 +3,7 @@ import { Text, View, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import Header from '../../../Components/Header';
 import { Icon, LinearGradient, ImagePicker, ImageCropper } from 'expo';
+import { setImageInfo } from '../../../Actions/ImageProcess'
 
 class Main extends React.Component{
     static navigationOptions = {
@@ -20,14 +21,16 @@ class Main extends React.Component{
     onPressImagePicker = async() => {
          
         let result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
-            aspect: [4, 3],
+            allowsEditing: true,          
+            //quality: 0.5,
+            base64: true  
         });
 
         console.log(result);
 
         if (!result.cancelled) {
-            this.props.navigation.navigate('PickImageScreen', {uri: result.uri})
+            this.props.setImageInfo(result);
+            this.props.navigation.navigate('ResultScreen', {uri: result.uri})
         }
  
     }
@@ -87,5 +90,12 @@ const mapStateToProps = (state, owProps) => {
         google: state.auth.google
     }
 }
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        setImageInfo: (info) => {
+            dispatch(setImageInfo(info))
+        }
+    }
+}
 
-export default connect(mapStateToProps)(Main)
+export default connect(mapStateToProps, mapDispatchToProps)(Main)

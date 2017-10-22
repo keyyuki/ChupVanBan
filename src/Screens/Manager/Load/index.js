@@ -26,6 +26,9 @@ class LoadScreen extends Component{
             }
             return this.props.logout();
         } catch (error) {
+            console.log('====================================');
+            console.log(error);
+            console.log('====================================');
             this.props.logout();
         }
     }
