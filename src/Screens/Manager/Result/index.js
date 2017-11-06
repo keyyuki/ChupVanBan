@@ -34,7 +34,7 @@ class MyScreen extends Component{
             var params = {
                 "requests":{
                     "image": {
-                        "content": this.props.imageInfo.base64
+                        "content": 'ok, i test' //this.props.imageInfo.base64
                     },
                     "features": [
                         {
@@ -43,15 +43,16 @@ class MyScreen extends Component{
                     ]
                 }
             }
-           
-            var response = await fetch('https://vision.googleapis.com/v1/images:annotate?fields=responses%2FtextAnnotations&key=' + TestKey.key,
+            
+            var response = await fetch('https://us-central1-anhhunglau-7b113.cloudfunctions.net/helloWorld' ,
             {
                 method: 'POST',
                 headers: {
-                    'Accept': 'application/json',
+                    
                     'Content-Type': 'application/json',
+                    //'Certificate': 
                 },
-                body: JSON.stringify(params)
+                body: JSON.stringify({request: 123})
             });
             rs = await response.json();
             console.log('==============RS=================');

@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import {View, Text, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { Google } from 'expo';
+import firebase from 'firebase';
 import { logout, setProfile } from '../../../Actions/Auth';
+
+
 
 class LoadScreen extends Component{
     static navigationOptions = {
@@ -19,8 +22,17 @@ class LoadScreen extends Component{
               });
             var result = await userInfoResponse.json();
 
-            if(result && result.id){
-                this.props.setProfile(result);
+            if(result && result.id){                
+                // signin Firebase
+                var credential = firebase.auth.GoogleAuthProvider.credential(this.props.googleIdToken);
+                firebase.auth().signInWithCredential(credential).then(res => {
+                    
+                    console.log('res', res.uid);
+                    console.log('firebase', firebase.auth().currentUser);
+                });
+                
+
+                this.props.setProfile(result);                
                 this.props.navigation.navigate('MainScreen');
                 return;
             }
@@ -54,6 +66,7 @@ class LoadScreen extends Component{
 const mapStateToProps = (state, ownProps) => {
     return {
         googleAccessToken: state.auth.google.accessToken,
+        googleIdToken: state.auth.google.idToken,
         user: state.auth.profile
     };
 };
