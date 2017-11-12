@@ -27,8 +27,10 @@ class LoadScreen extends Component{
                 var credential = firebase.auth.GoogleAuthProvider.credential(this.props.googleIdToken);
                 firebase.auth().signInWithCredential(credential).then(res => {
                     
-                    console.log('res', res.uid);
+                    console.log('res', res);
+
                     console.log('firebase', firebase.auth().currentUser);
+                    firebase.auth().currentUser.getIdToken(true).then(token => {console.log('token', token)});
                 });
                 
 
