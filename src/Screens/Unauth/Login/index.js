@@ -15,8 +15,7 @@ class Login extends React.Component{
                 //iosClientId: YOUR_CLIENT_ID_HERE,
                 scopes: [
                     'profile', 'email',
-                    'https://www.googleapis.com/auth/cloud-platform',
-                    'https://www.googleapis.com/auth/cloud-vision'
+                    
                 ],
             });
 

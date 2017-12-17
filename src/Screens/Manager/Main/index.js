@@ -3,7 +3,9 @@ import { Text, View, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import Header from '../../../Components/Header';
 import { Icon, LinearGradient, ImagePicker, ImageCropper } from 'expo';
-import { setImageInfo } from '../../../Actions/ImageProcess'
+import { setImageInfo } from '../../../Actions/ImageProcess';
+import { navigate } from '../../../Actions/Nav';
+
 
 class Main extends React.Component{
     static navigationOptions = {
@@ -26,14 +28,30 @@ class Main extends React.Component{
             base64: true  
         });
 
-        console.log(result);
+       
 
         if (!result.cancelled) {
             this.props.setImageInfo(result);
-            this.props.navigation.navigate('ResultScreen', {uri: result.uri})
+            this.props.navigate('ResultScreen', {uri: result.uri})
         }
  
     }
+
+    onPressCamera = async() => {
+         
+        let result = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,          
+            quality: 0.5,
+            base64: true  
+        });       
+
+        if (!result.cancelled) {
+            this.props.setImageInfo(result);
+            this.props.navigate('ResultScreen', {uri: result.uri})
+        }
+ 
+    }
+
 
     render(){
         return (
@@ -94,6 +112,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         setImageInfo: (info) => {
             dispatch(setImageInfo(info))
+        },
+        navigate: (page, params= null) => {
+            dispatch(navigate(page, params))
         }
     }
 }

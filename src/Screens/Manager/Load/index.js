@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Google } from 'expo';
 import firebase from 'firebase';
 import { logout, setProfile } from '../../../Actions/Auth';
+import { navigate } from '../../../Actions/Nav';
 
 
 
@@ -34,8 +35,8 @@ class LoadScreen extends Component{
                 });
                 
 
-                this.props.setProfile(result);                
-                this.props.navigation.navigate('MainScreen');
+                this.props.setProfile(result);
+                this.props.navigate('MainScreen');
                 return;
             }
             return this.props.logout();
@@ -80,6 +81,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         logout: () => {
             dispatch(logout());
+        },
+        navigate: (page) => {
+            dispatch(navigate(page))
         }
     };
 };

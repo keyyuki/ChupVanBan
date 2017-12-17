@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
-import { View, Text, Image, ActivityIndicator } from 'react-native';
+import { View, Text, Image, ActivityIndicator, TextInput, Dimensions, ScrollView, Clipboard } from 'react-native';
 import { connect } from 'react-redux';
 import Header from '../../../Components/Header';
 import { Icon, LinearGradient, ImagePicker, ImageCropper } from 'expo';
 import TestKey from '../../../../testKey.json';
 import firebase from 'firebase';
+import Layout from './Layout';
+import Toast from 'react-native-smart-toast'
 
+const screenHeight = Dimensions.get('window').height;
 class MyScreen extends Component{
     static navigationOptions = {
         title: 'Result',        
@@ -18,12 +21,11 @@ class MyScreen extends Component{
         
         this.state = {
             status: 'loading',
-            errorMsg: ''
+            errorMsg: '',
+            inputHeight: screenHeight -56,
+            fontSize: 12
         };
-        console.log(this.props.imageInfo)
-        console.log('====================================');
-        console.log('size', this.props.imageInfo.base64.length);
-        console.log('====================================');
+        
     }
 
     componentDidMount() {
@@ -56,13 +58,12 @@ class MyScreen extends Component{
                 body: JSON.stringify(params)
             });
             rs = await response.json();
-            console.log('==============RS=================');
-            console.log(rs);
-            console.log('====================================');
+           
             if(rs.code){
                 this.setState({
                     status: 'complete',
-                    result: rs.data
+                    result: rs.data,
+                    origin: rs.data,
                 })
             } else {
                 this.setState({
@@ -81,31 +82,69 @@ class MyScreen extends Component{
                 })
         }
     }
+
+    getInputSize = (event) => {
+        this.setState({
+            inputHeight: event.nativeEvent.layout.height
+        })
+    }
+
+    upFontSize = () => {
+        if(this.state.fontSize < 36){
+            this.setState({
+                fontSize: this.state.fontSize + 1
+            })
+        }        
+    }
+    downFontSize = () => {
+        if(this.state.fontSize > 4){
+            this.setState({
+                fontSize: this.state.fontSize - 1
+            })
+        }        
+    }
+    nl2sp = () => {
+        var newResult = this.state.result.replace(/\n/g, " ");
+        this.setState({
+            result: newResult
+        })
+    }
+    copyToClipboard = () => {
+        Clipboard.setString(this.state.result);
+        this._toast.show({
+            position: Toast.constants.gravity.top,
+            children: <View><Text style={{color: 'white'}}>Đã sao chép văn bản.</Text></View>
+        })
+    }
+    onChangeText = (text) => {
+        this.setState({
+            result: text
+        })
+    }
+
     renderBody(){
         if(this.state.status == 'loading'){
             return (
                 <View style={{flex: 1}}>
                     
-                        
-                    <View style={{flex: 1, padding: 16}}>
+                    <View style={{marginVertical: 8, flexDirection: 'row', justifyContent: 'center'}}>
+                        <ActivityIndicator size="small"/>
+                        <Text style={{marginLeft: 8}}>Đang phân tích...</Text>
+                    </View>   
+                    <View style={{flex: 1, paddingHorizontal: 16}}>
                     <Image source={{uri: 'data:image/jpeg;base64,' + this.props.imageInfo.base64}}  style={{
                         flex: 1,
                         alignContent: 'flex-start',
                         resizeMode: 'contain'
                     }}/>
                     </View>
-                    <View style={{marginTop: 8, flexDirection: 'row', justifyContent: 'center'}}>
-                        <ActivityIndicator size="small"/>
-                        <Text style={{marginLeft: 8}}>Đang phân tích...</Text>
-                    </View>
+                    
                 </View>
             )
         }
         if(this.state.status == 'error'){
              return (
-                <View style={{flex: 1}}>                  
-                        
-                   
+                <View style={{flex: 1}}> 
                     <View style={{justifyContent: 'center', alignItems: 'center', padding: 16}}>
                         <Text style={{color: 'red'}}>{this.state.errorMsg}</Text>
                     </View>
@@ -113,15 +152,19 @@ class MyScreen extends Component{
             )
         }
         if(this.state.status == 'complete'){
-            return (
-                <View style={{flex: 1}}>                  
-                        
-                   
-                    <View style={{justifyContent: 'center', alignItems: 'center', padding: 16}}>
-                        <Text>{this.state.result}</Text>
-                    </View>
-                </View>
-            )
+            
+            return <Layout
+            data={this.state}
+            getInputSize={this.getInputSize}
+            upFontSize={this.upFontSize}
+            downFontSize={this.downFontSize}
+            copyToClipboard={this.copyToClipboard}
+            nl2sp={this.nl2sp}
+            onChangeText={this.onChangeText}
+            
+            
+            
+            />
         }
     }
     
@@ -135,6 +178,10 @@ class MyScreen extends Component{
                     title="Kết quả"
                 />
                 { this.renderBody() }
+                <Toast 
+                     ref={ component => this._toast = component }
+                    marginTop={64}>
+                </Toast>
             </View>
         )
     }
