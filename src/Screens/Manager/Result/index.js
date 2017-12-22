@@ -3,7 +3,7 @@ import { View, Text, Image, ActivityIndicator, TextInput, Dimensions, ScrollView
 import { connect } from 'react-redux';
 import Header from '../../../Components/Header';
 import { Icon, LinearGradient, ImagePicker, ImageCropper } from 'expo';
-import TestKey from '../../../../testKey.json';
+
 import firebase from 'firebase';
 import Layout from './Layout';
 import Toast from 'react-native-smart-toast'
@@ -11,21 +11,21 @@ import Toast from 'react-native-smart-toast'
 const screenHeight = Dimensions.get('window').height;
 class MyScreen extends Component{
     static navigationOptions = {
-        title: 'Result',        
+        title: 'Result',
     };
 
     constructor(props){
         super(props);
 
         this.uri = this.props.navigation.state.params.uri;
-        
+
         this.state = {
             status: 'loading',
             errorMsg: '',
             inputHeight: screenHeight -56,
             fontSize: 12
         };
-        
+
     }
 
     componentDidMount() {
@@ -51,14 +51,14 @@ class MyScreen extends Component{
             {
                 method: 'POST',
                 headers: {
-                    
+
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + idToken
                 },
                 body: JSON.stringify(params)
             });
             rs = await response.json();
-           
+
             if(rs.code){
                 this.setState({
                     status: 'complete',
@@ -71,7 +71,7 @@ class MyScreen extends Component{
                     errorMsg: rs.messages
                 })
             }
-            
+
         } catch (error) {
             console.log('==============Error==================');
             console.log(error);
@@ -94,14 +94,14 @@ class MyScreen extends Component{
             this.setState({
                 fontSize: this.state.fontSize + 1
             })
-        }        
+        }
     }
     downFontSize = () => {
         if(this.state.fontSize > 4){
             this.setState({
                 fontSize: this.state.fontSize - 1
             })
-        }        
+        }
     }
     nl2sp = () => {
         var newResult = this.state.result.replace(/\n/g, " ");
@@ -126,11 +126,11 @@ class MyScreen extends Component{
         if(this.state.status == 'loading'){
             return (
                 <View style={{flex: 1}}>
-                    
+
                     <View style={{marginVertical: 8, flexDirection: 'row', justifyContent: 'center'}}>
                         <ActivityIndicator size="small"/>
                         <Text style={{marginLeft: 8}}>Đang phân tích...</Text>
-                    </View>   
+                    </View>
                     <View style={{flex: 1, paddingHorizontal: 16}}>
                     <Image source={{uri: 'data:image/jpeg;base64,' + this.props.imageInfo.base64}}  style={{
                         flex: 1,
@@ -138,13 +138,13 @@ class MyScreen extends Component{
                         resizeMode: 'contain'
                     }}/>
                     </View>
-                    
+
                 </View>
             )
         }
         if(this.state.status == 'error'){
              return (
-                <View style={{flex: 1}}> 
+                <View style={{flex: 1}}>
                     <View style={{justifyContent: 'center', alignItems: 'center', padding: 16}}>
                         <Text style={{color: 'red'}}>{this.state.errorMsg}</Text>
                     </View>
@@ -152,7 +152,7 @@ class MyScreen extends Component{
             )
         }
         if(this.state.status == 'complete'){
-            
+
             return <Layout
             data={this.state}
             getInputSize={this.getInputSize}
@@ -161,24 +161,24 @@ class MyScreen extends Component{
             copyToClipboard={this.copyToClipboard}
             nl2sp={this.nl2sp}
             onChangeText={this.onChangeText}
-            
-            
-            
+
+
+
             />
         }
     }
-    
+
     render(){
-        
+
         return (
             <View style={{flex: 1, backgroundColor: '#FAFAFA',}}>
-                <Header 
+                <Header
                     left="arrow-left"
                     onLeftPress={() => {this.props.navigation.goBack()}}
                     title="Kết quả"
                 />
                 { this.renderBody() }
-                <Toast 
+                <Toast
                      ref={ component => this._toast = component }
                     marginTop={64}>
                 </Toast>
