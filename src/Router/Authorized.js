@@ -36,7 +36,7 @@ class ReduxNavigation extends React.Component {
 
     backHandler = () => {
         const { nav } = this.props;
-        if(nav.index == 0){
+        if(nav.index <= 1){
             return false;
         }
         this.props.goBack();

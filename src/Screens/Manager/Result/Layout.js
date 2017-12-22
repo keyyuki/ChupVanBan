@@ -38,6 +38,9 @@ export default class Layout extends React.PureComponent{
     }
 
     _renderControls(){
+        if(!this.props.data.showmenu){
+            return null;
+        }
         return (
             <View style={{
                 borderTopColor: '#999',

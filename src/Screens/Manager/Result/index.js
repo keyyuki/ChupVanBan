@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, Image, ActivityIndicator, TextInput, Dimensions, ScrollView, Clipboard } from 'react-native';
+import { View, Text, Image, ActivityIndicator, TextInput, Dimensions, ScrollView, Clipboard, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import Header from '../../../Components/Header';
 import { Icon, LinearGradient, ImagePicker, ImageCropper } from 'expo';
@@ -23,13 +23,24 @@ class MyScreen extends Component{
             status: 'loading',
             errorMsg: '',
             inputHeight: screenHeight -56,
-            fontSize: 12
+            fontSize: 12,
+            showmenu: true
         };
 
     }
 
     componentDidMount() {
         this.detectText();
+        
+    }
+    componentWillMount () {
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+    }
+
+    componentWillUnmount () {
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
     }
 
     detectText = async() => {
@@ -119,6 +130,18 @@ class MyScreen extends Component{
     onChangeText = (text) => {
         this.setState({
             result: text
+        })
+    }
+
+    _keyboardDidShow = () => {
+        this.setState({
+            showmenu: false
+        })
+    }
+
+    _keyboardDidHide = () => {
+        this.setState({
+            showmenu: true
         })
     }
 

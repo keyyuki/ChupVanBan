@@ -67,7 +67,7 @@ class Main extends React.Component{
             />
             <View style={{flex: 1}}>
                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={this.onPressCamera}>
                         <LinearGradient
                         colors={['#FFFFFF', '#F5F5F5']}
                         style={{
