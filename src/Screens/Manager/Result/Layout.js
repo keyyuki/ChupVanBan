@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Dimensions, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Dimensions, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { Icon, LinearGradient, ImagePicker, ImageCropper } from 'expo';
 
 const screenHeight = Dimensions.get('window').height - 56;
@@ -18,7 +18,7 @@ export default class Layout extends React.PureComponent{
                     fontSize: this.props.data.fontSize
                     }}
                     multiline={true}
-                    value={this.props.data.result}
+                    value={this.props.data.resultDisplay == 'result' ? this.props.data.result : this.props.data.translate.to}
                     underlineColorAndroid="transparent"
                     onChangeText={this.props.onChangeText}
                 />
@@ -35,6 +35,30 @@ export default class Layout extends React.PureComponent{
                 </ScrollView>
             </View>
         )
+    }
+
+    _renderTransalteButton = () => {
+        if(this.props.data.translate.status != 'none'){
+            return (
+                <View style={styles.button}>
+                    <ActivityIndicator size="small"/>
+                </View>
+            )
+        }
+        if(this.props.data.resultDisplay == 'translate'){
+            return (
+                <TouchableOpacity style={styles.button} onPress={this.props.translate}>                            
+                    <Icon.MaterialCommunityIcons name="undo" size={24}/>                            
+                </TouchableOpacity>
+            )
+        }
+
+        return (
+            <TouchableOpacity style={styles.button} onPress={this.props.translate}>                            
+                <Icon.MaterialCommunityIcons name="translate" size={24}/>                            
+            </TouchableOpacity>
+        )
+        
     }
 
     _renderControls(){
@@ -71,9 +95,7 @@ export default class Layout extends React.PureComponent{
                     flexDirection: 'row'
                 }}>
                     <View style={{flex: 1, padding: 8}}>
-                        <TouchableOpacity style={styles.button}>                            
-                            <Icon.MaterialCommunityIcons name="translate" size={24}/>                            
-                        </TouchableOpacity>
+                        { this._renderTransalteButton()}
                     </View>
                     <View style={{flex: 1, padding: 8}}>
                         <TouchableOpacity style={styles.button} onPress={this.props.upFontSize}>                            

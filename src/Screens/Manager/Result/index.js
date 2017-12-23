@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
-import { View, Text, Image, ActivityIndicator, TextInput, Dimensions, ScrollView, Clipboard, Keyboard } from 'react-native';
+import { View, Text, Image, ActivityIndicator, TextInput, Dimensions, ScrollView, Clipboard, Keyboard, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import Header from '../../../Components/Header';
 import { Icon, LinearGradient, ImagePicker, ImageCropper } from 'expo';
 
 import firebase from 'firebase';
 import Layout from './Layout';
-import Toast from 'react-native-smart-toast'
+import Toast from 'react-native-smart-toast';
+import Api from './Api';
+import { goBack } from '../../../Actions/Nav'
 
 const screenHeight = Dimensions.get('window').height;
 class MyScreen extends Component{
@@ -24,7 +26,13 @@ class MyScreen extends Component{
             errorMsg: '',
             inputHeight: screenHeight -56,
             fontSize: 12,
-            showmenu: true
+            showmenu: true,
+            translate: {
+                from: '',
+                to: '',
+                status: 'none'
+            },
+            resultDisplay: 'result'
         };
 
     }
@@ -94,6 +102,52 @@ class MyScreen extends Component{
         }
     }
 
+    translate = async() => {
+        if(!this.state.result){
+            return null;
+        }
+        
+        if( this.state.translate.status != 'none' ){
+            return null;
+        }
+        if(this.state.result == this.state.translate.from ){
+            if(this.state.translate.to){
+                this.setState({
+                    resultDisplay: 'result' ? 'translate' : 'result'
+                });
+            }
+            return null;
+        }
+        this.setState({
+            translate: {
+                from : this.state.result,
+                to: '',
+                status: 'loading'
+            },
+        });
+        var rs = await Api.translate(this.state.result);
+        if(rs.code){
+            this.setState({
+                translate: {
+                    from : this.state.translate.from,
+                    to: rs.data,
+                    status: 'none'
+                },
+                resultDisplay: 'translate'
+            });
+        } else {
+            this.setState({
+                translate: {
+                    from : '',
+                    to: '',
+                    status: 'none'
+                },
+                resultDisplay: 'result'
+            });
+            Alert.alert('Lỗi', rs.messages.join("\n"));
+        }
+    }
+
     getInputSize = (event) => {
         this.setState({
             inputHeight: event.nativeEvent.layout.height
@@ -128,9 +182,19 @@ class MyScreen extends Component{
         })
     }
     onChangeText = (text) => {
-        this.setState({
-            result: text
-        })
+        if(this.state.resultDisplay == 'result'){
+            this.setState({
+                result: text
+            })
+        } else {
+            this.setState({
+                translate: {
+                    ...this.state.translate,
+                    to: text
+                }
+            })
+        }
+        
     }
 
     _keyboardDidShow = () => {
@@ -184,7 +248,7 @@ class MyScreen extends Component{
             copyToClipboard={this.copyToClipboard}
             nl2sp={this.nl2sp}
             onChangeText={this.onChangeText}
-
+            translate={this.translate}        
 
 
             />
@@ -197,7 +261,7 @@ class MyScreen extends Component{
             <View style={{flex: 1, backgroundColor: '#FAFAFA',}}>
                 <Header
                     left="arrow-left"
-                    onLeftPress={() => {this.props.navigation.goBack()}}
+                    onLeftPress={() => {this.props.goBack()}}
                     title="Kết quả"
                 />
                 { this.renderBody() }
@@ -215,6 +279,14 @@ const mapStateToProps = (state, ownProps) => {
         googleAccessToken: state.auth.google.accessToken,
     }
 }
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        goBack: () => {
+            dispatch(goBack())
+        }
+    }
+}
+
 function getBase64FileSize(base64Encodeed) {
     if (!base64Encodeed) {
         return 0;
@@ -222,4 +294,4 @@ function getBase64FileSize(base64Encodeed) {
     return parseInt(base64Encodeed.replace(/=/g, "").length * 0.75);
 }
 
-export default connect(mapStateToProps)(MyScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(MyScreen)
