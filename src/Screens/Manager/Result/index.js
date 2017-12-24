@@ -110,11 +110,13 @@ class MyScreen extends Component{
         if( this.state.translate.status != 'none' ){
             return null;
         }
+
         if(this.state.result == this.state.translate.from ){
             if(this.state.translate.to){
                 this.setState({
-                    resultDisplay: 'result' ? 'translate' : 'result'
+                    resultDisplay: this.state.resultDisplay == 'result' ? 'translate' : 'result'
                 });
+                console.log('aaa')
             }
             return null;
         }
@@ -169,13 +171,26 @@ class MyScreen extends Component{
         }
     }
     nl2sp = () => {
-        var newResult = this.state.result.replace(/\n/g, " ");
-        this.setState({
-            result: newResult
-        })
+        if(this.state.resultDisplay == 'result'){
+            var newResult = this.state.result.replace(/\n/g, " ");
+       
+            this.setState({
+                result: newResult
+            })
+        } else {
+            var newResult = this.state.translate.to.replace(/\n/g, " ");
+       
+            this.setState({
+                translate: {
+                    ...this.state.translate,
+                    to: newResult
+                }
+            })
+        }
+        
     }
     copyToClipboard = () => {
-        Clipboard.setString(this.state.result);
+        Clipboard.setString(this.state.resultDisplay == 'result' ? this.state.result : this.state.translate.to);
         this._toast.show({
             position: Toast.constants.gravity.top,
             children: <View><Text style={{color: 'white'}}>Đã sao chép văn bản.</Text></View>
@@ -261,7 +276,7 @@ class MyScreen extends Component{
             <View style={{flex: 1, backgroundColor: '#FAFAFA',}}>
                 <Header
                     left="arrow-left"
-                    onLeftPress={() => {this.props.goBack()}}
+                    onPressLeft={this.props.goBack}
                     title="Kết quả"
                 />
                 { this.renderBody() }

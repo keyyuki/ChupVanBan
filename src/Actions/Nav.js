@@ -11,11 +11,10 @@ export const navigate = (page, params = null) => {
 }
 
 export const goBack = (page=null) => {
-    return (dispath, getState) => {
-        dispath({
+    return {
             type: GOBACK,
             page: page
             
-        });
-    }
+        };
+    
 }

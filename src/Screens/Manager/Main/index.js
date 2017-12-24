@@ -61,8 +61,7 @@ class Main extends React.Component{
 
         }}>
             <Header
-                left="menu"
-                onPressLeft={() => {}}
+                
                 title="Chụp văn bản"
             />
             <View style={{flex: 1}}>

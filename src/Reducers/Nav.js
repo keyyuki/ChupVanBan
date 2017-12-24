@@ -14,7 +14,7 @@ export default navReducer = (state = initialState, action) => {
                 state);
             break;
         case GOBACK: 
-        
+           
             nextState = AppNavigation.router.getStateForAction(
                 NavigationActions.back(), 
                 state);
