@@ -7,13 +7,20 @@
     },
     "name": "Chup van ban",
     "icon": "./assets/icon.png",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "slug": "chup-van-ban",
     "ios": {
       "bundleIdentifier": "com.keyyuki.chupvanban"
     },
     "android": {
-      "package": "com.keyyuki.chupvanban"
+      "package": "com.keyyuki.chupvanban",
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "READ_INTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"],
+      "versionCode": 4,
+
+      "googleSignIn": {
+        "apiKey": "AIzaSyCmxOYyR2Tv16RlGeBt5rwYeYKo-JllAO0",
+        "certificateHash": "44479EF2512C418675D7A3057BBF49927EB80F7D"
+      }
     }
   }
 }
