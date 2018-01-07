@@ -74,10 +74,9 @@ export default class Layout extends React.PureComponent{
                 <View style={{
                     flexDirection: 'row'
                 }}>
+                    
                     <View style={{flex: 1, padding: 8}}>
-                        <TouchableOpacity style={styles.button}>                            
-                            <Icon.MaterialCommunityIcons name="keyboard" size={24}/>                            
-                        </TouchableOpacity>
+                        { this._renderTransalteButton()}
                     </View>
                     <View style={{flex: 1, padding: 8}}>
                         <TouchableOpacity style={styles.button} onPress={this.props.nl2sp}>                            
@@ -94,9 +93,7 @@ export default class Layout extends React.PureComponent{
                 <View style={{
                     flexDirection: 'row'
                 }}>
-                    <View style={{flex: 1, padding: 8}}>
-                        { this._renderTransalteButton()}
-                    </View>
+                    
                     <View style={{flex: 1, padding: 8}}>
                         <TouchableOpacity style={styles.button} onPress={this.props.upFontSize}>                            
                             <Icon.MaterialCommunityIcons name="magnify-plus" size={24}/>                            
