@@ -11,11 +11,11 @@ class Login extends React.Component{
     requestSigninToGoogle = async() => {
         try {
             var result = await Google.logInAsync({
-                androidClientId: '126636368431-g07u48bd09lfnhd2ih6ad29klo23d2jo.apps.googleusercontent.com',
+                androidClientId: '126636368431-im9p2qtc657ptu4s8fd8etk9hjsctmu5.apps.googleusercontent.com',
                 //iosClientId: YOUR_CLIENT_ID_HERE,
                 scopes: [
                     'profile', 'email',
-                    
+
                 ],
             });
 
